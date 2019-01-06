@@ -1,0 +1,1 @@
+# wasm-strings-attached
