@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  go_cat_game_build:
+    build:
+      dockerfile: go.Dockerfile
+      context: .
+    working_dir: /src
+    volumes:
+      - "./:/src"
+  tinygo_cat_game_build:
+    build:
+      dockerfile: tinygo.Dockerfile
+      context: .
+    working_dir: /src
+    volumes:
+      - "./:/src"
+  cat_game_server:
+    build:
+      dockerfile: nginx.Dockerfile
+      context: .
+    working_dir: /src
+    volumes:
+      - "./:/src"
