@@ -1,7 +1,7 @@
 # WebAssembly
-*.wasm
-dist/*.js
-build/*.js
+# *.wasm
+# dist/*.js
+# build/*.js
 
 # Binaries for programs and plugins
 *.exe
