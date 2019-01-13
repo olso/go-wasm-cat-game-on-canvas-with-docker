@@ -1,14 +1,20 @@
 # 🐈 go-wasm-cat-game-on-canvas
 
+Companion codebase
+
 ## Requirements
-You'll need Docker 🎣. I've failed too many times trying to install Golang on my host machine, switch versions, keep packages in order on my Mac machine. Thus Docker is used.
+Docker
 
 ## Usage 🔧 💡
-`make tinygo_build` to build with TinyGo compiler; produces kilobytes version 😻
+`make build_tinygo` to build with TinyGo compiler; produces __kilobytes__ version 😻
 
-`make tinygo_build` to build with Go compiler; produces megabytes version 😿
+`make build_go` to build with Go compiler; produces __megabytes__ version 😿
 
-`make run` to open browser & launch nginx
+`make build`
 
-## More
+`make serve` run nginx with proper WebAssembly __MIME__ type, Chrome/Firefox cries otherwise
+
+## Contact me
 [https://olso.space](https://olso.space)
+
+[https://twitter.com/olso_uznebolo](https://twitter.com/olso_uznebolo)
