@@ -1,6 +1,8 @@
 # 🐈 go-wasm-cat-game-on-canvas
 
-Companion codebase
+Works with Chrome for Android! Thank you @twifkak
+
+Companion codebase to article
 
 ## Requirements
 Docker
