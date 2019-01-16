@@ -1,4 +1,4 @@
-# 🐈 go-wasm-cat-game-on-canvas
+# 🐈 go-wasm-cat-game-on-canvas-with-docker
 
 Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
 
