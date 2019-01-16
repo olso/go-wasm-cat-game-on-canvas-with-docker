@@ -1,6 +1,6 @@
 # 🐈 go-wasm-cat-game-on-canvas
 
-Works with Chrome for Android! Thank you @twifkak
+Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
 
 Companion codebase to article
 
