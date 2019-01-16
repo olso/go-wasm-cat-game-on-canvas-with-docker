@@ -5,6 +5,9 @@ Companion codebase
 ## Requirements
 Docker
 
+## Setup Docker image
+`docker build .` to build using twifkak's Golang, for Chrome on Android
+
 ## Usage 🔧 💡
 `make build_tinygo` to build with TinyGo compiler; produces __kilobytes__ version 😻
 
