@@ -1,83 +1,101 @@
 package main
 
 import (
-	"fmt"
-	"reflect"
-	"syscall/js"
+	"math"
+	"syscall/js" // https://golang.org/pkg/syscall/js
 	// "net/http"
 )
 
 var (
-	win           js.Value = js.Global()
-	doc           js.Value = win.Get("document")
-	body          js.Value = doc.Get("body")
-	canvas        js.Value
-	renderer      js.Func
-	mousePosition Point
-	laserPosition Point
+	win              js.Value = js.Global()
+	doc              js.Value = win.Get("document")
+	body             js.Value = doc.Get("body")
+	console          js.Value = win.Get("console")
+	winSize          WinSize  = WinSize{w: 0, h: 0}
+	canvas, laserCtx js.Value
+	renderer         js.Func
+	mouseXY, laserXY Point
 )
 
-/*
-The js namespace is from https://golang.org/pkg/syscall/js
-*/
 func main() {
+	// TODO explain this hack
 	runGameForever := make(chan bool) // https://stackoverflow.com/questions/47262088/golang-forever-channel
-	fmt.Println("0", reflect.TypeOf(renderer))
+
+	// http.Get("http://google.com")
 
 	setupCanvas()
+	setupGame()
 
-	renderer := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		// canvasCtx := canvas.Call("getContext", "2d")
-		// touchClickEventHandler := js.NewCallback(func(args []js.Value)) {
-		// }
-		// doc.Call("addEventListener", "click", touchClickEventHandler, false)
-		// doc.Call("addEventListener", "touchstart", false)
-		// http.Get("http://google.com")
-		fmt.Println("Rendering!")
-		fmt.Println("2", reflect.TypeOf(renderer))
+	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		drawGame()
 		win.Call("requestAnimationFrame", renderer)
-		return this
+		return nil
 	})
 	// postpones execution at the end; clean up memory
 	defer renderer.Release()
-
-	fmt.Println("1", reflect.TypeOf(renderer))
-
 	// for the 60fps anims
 	win.Call("requestAnimationFrame", renderer)
 
-	// var mouseEventHandler js.Func = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// 	// fmt.Println(this.Get("clientX").Float())
-	// 	// fmt.Println(e.Get("clientX").Float())
-	// 	fmt.Println("click tap")
-	// 	// mousePosition.x = e.Get("clientX").Float()
-	// 	// mousePosition.y = e.Get("clientY").Float()
-	// 	return this
-	// })
-	// defer mouseEventHandler.Release()
-	// win.Call("addEventListener", "click", mouseEventHandler, false)
-	// win.Call("addEventListener", "touchstart", mouseEventHandler, false)
+	var mouseEventHandler js.Func = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		event := args[0]
+		mouseXY.x = event.Get("clientX").Float()
+		mouseXY.y = event.Get("clientY").Float()
+		log("mouseEvent", "x", mouseXY.x, "y", mouseXY.y)
+		log("isLaserCaught", isLaserCaught())
+		return nil
+	})
+	defer mouseEventHandler.Release()
+	win.Call("addEventListener", "click", mouseEventHandler, false)
+
+	log("Game started")
 
 	<-runGameForever
 }
 
+// Game helpers
+func drawGame() {
+	laserCtx.Call("clearRect", 0, 0, winSize.w, winSize.h)
+	laserCtx.Call("beginPath")
+	laserCtx.Call("arc", laserXY.x, laserXY.y, 20, 0, math.Pi*2)
+	laserCtx.Set("fillStyle", "#0095DD")
+	laserCtx.Call("fill")
+	laserCtx.Call("closePath")
+
+	laserXY.x += 0.02
+	laserXY.y += -0.02
+}
+
+func setupGame() {
+	laserCtx = canvas.Call("getContext", "2d")
+
+	// center position
+	laserXY.x = winSize.w / 2
+	laserXY.y = winSize.h / 2
+}
+
+func isLaserCaught() bool {
+	return laserCtx.Call("isPointInPath", mouseXY.x, mouseXY.y).Bool()
+}
+
 // Helpers
 type Point struct {
-	x float64
-	y float64
+	x, y float64
+}
+
+type WinSize struct {
+	w, h float64
 }
 
 func setupCanvas() {
+	winSize.h = win.Get("innerHeight").Float()
+	winSize.w = win.Get("innerWidth").Float()
+
 	canvas = doc.Call("createElement", "canvas")
 	body.Call("appendChild", canvas)
-	winHeight, winWidth := getWinSize()
-	canvas.Set("height", winHeight)
-	canvas.Set("width", winWidth)
+	canvas.Set("height", winSize.h)
+	canvas.Set("width", winSize.w)
 }
 
-func getWinSize() (float64, float64) {
-	h := win.Get("innerHeight").Float()
-	w := win.Get("innerWidth").Float()
-
-	return h, w
+func log(args ...interface{}) {
+	console.Call("log", args...)
 }
