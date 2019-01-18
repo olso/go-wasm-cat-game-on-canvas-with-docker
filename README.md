@@ -23,3 +23,7 @@ Docker, Go 1.12 (Release Candidate)
 [https://olso.space](https://olso.space)
 
 [https://twitter.com/olso_uznebolo](https://twitter.com/olso_uznebolo)
+
+## Weird stuff
+
+* WebAssembly is not enabled in iOS Simulator
