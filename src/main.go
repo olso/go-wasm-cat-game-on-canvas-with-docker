@@ -13,7 +13,7 @@ var (
 	canvas, laserCtx             js.Value
 	mousePosition, laserPosition Point
 	renderer                     js.Func
-	dx, dy                       float64  = 2.5, -2.5
+	directionX, directionY       float64  = 2.5, -2.5
 	ballRadius                   float64  = 35
 	beep                         js.Value = document.Call("getElementById", "beep")
 )
@@ -44,16 +44,16 @@ func main() {
 
 func updateGame() {
 	// wall detection
-	if laserPosition.x+dx > windowSize.w-ballRadius || laserPosition.x+dx < ballRadius {
-		dx = -dx
+	if laserPosition.x+directionX > windowSize.w-ballRadius || laserPosition.x+directionX < ballRadius {
+		directionX = -directionX
 	}
 
-	if laserPosition.y+dy > windowSize.h-ballRadius || laserPosition.y+dy < ballRadius {
-		dy = -dy
+	if laserPosition.y+directionY > windowSize.h-ballRadius || laserPosition.y+directionY < ballRadius {
+		directionY = -directionY
 	}
 
-	laserPosition.x += dx
-	laserPosition.y += dy
+	laserPosition.x += directionX
+	laserPosition.y += directionY
 
 	laserCtx.Call("clearRect", 0, 0, windowSize.w, windowSize.h)
 	laserCtx.Call("beginPath")
@@ -68,8 +68,7 @@ func updatePlayer(event js.Value) {
 	log("mouseEvent", "x", mousePosition.x, "y", mousePosition.y)
 
 	if isLaserCaught() {
-		playSound() // figure out the delay
-		blinkLamp()
+		playSound()
 	}
 }
 
@@ -94,21 +93,13 @@ func isLaserCaught() bool {
 }
 
 func playSound() {
-	beep.Call("play") // there is a delay when running chrome on android
+	beep.Call("play")
 	window.Get("navigator").Call("vibrate", 300)
 }
 
-func blinkLamp() {
-	// http.Get("http://192.168.31.123:8080/blink/twice") // excluded since no tree shaking, made it 7MB
-}
+type Point struct{ x, y float64 }
 
-type Point struct {
-	x, y float64
-}
-
-type WindowSize struct {
-	w, h float64
-}
+type WindowSize struct{ w, h float64 }
 
 func log(args ...interface{}) {
 	window.Get("console").Call("log", args...)
