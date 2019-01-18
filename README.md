@@ -5,7 +5,7 @@ Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
 Companion codebase to article
 
 ## Requirements
-Docker, Go 1.12 (Release Candidate)
+Docker, Go 1.12 (1.12-rc)
 
 ## Setup Docker image if you need Chrome+Android
 `docker build .` twifkak's golang fork
@@ -27,3 +27,4 @@ Docker, Go 1.12 (Release Candidate)
 ## Weird stuff
 
 * WebAssembly is not enabled in iOS Simulator
+* I had to use twifkak's Golang fork to instantiate in on phone, default Golang Wasm currently allocates too much memory
