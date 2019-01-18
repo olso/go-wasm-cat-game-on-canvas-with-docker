@@ -1,4 +1,3 @@
-# FROM golang:latest
 FROM golang:1.12-rc
 
 RUN mkdir /twifkak-go
