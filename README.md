@@ -2,10 +2,10 @@
 
 Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
 
-Companion codebase to article
+Companion codebase to article [TODO add link]()
 
 ## Requirements
-Docker, Go 1.12 (1.12-rc)
+Docker or local Go 1.12-rc
 
 ## Setup Docker image if you need Chrome+Android
 `docker build .` twifkak's golang fork
