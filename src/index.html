@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <style>body {height:100%;width:100%;padding:0;margin:0;background-color:#000000;}</style>
-    <script type="text/javascript" src="wasm_exec.js"></script>
+    <script type="text/javascript" src="./wasm_exec.js"></script>
     <script type="text/javascript">
       async function run(fileUrl) {
         try {
@@ -18,7 +18,7 @@
           console.error(err);
         }
       }
-      setTimeout(async () => run("game.wasm"));
+      setTimeout(async () => run("./game.wasm"));
     </script>
   </head>
   <body></body>
