@@ -6,22 +6,27 @@ import (
 )
 
 var (
-	window, canvas, laserCtx, beep js.Value
-	windowSize                     struct{ w, h float64 }
-	gs                             = gameState{laserSize: 35, directionX: 3.7, directionY: -3.7, laserX: 40, laserY: 40}
+	window, doc, body, canvas, laserCtx, beep js.Value
+	windowSize                                struct{ w, h float64 }
+	gs                                        = gameState{laserSize: 35, directionX: 3.7, directionY: -3.7, laserX: 40, laserY: 40}
 )
 
 func main() {
-	runGameForever := make(chan bool) // explain run forever
+	// https://stackoverflow.com/a/47262117
+	// creates empty channel
+	runGameForever := make(chan bool)
 	setup()
 
+	// declare renderer at compile time
 	var renderer js.Func
+	// looks like JS callback, right 😌
 	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		updateGame()
+		// for the 60fps anims
 		window.Call("requestAnimationFrame", renderer)
 		return nil
 	})
-	window.Call("requestAnimationFrame", renderer) // for the 60fps anims
+	window.Call("requestAnimationFrame", renderer)
 
 	var mouseEventHandler js.Func = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		updatePlayer(args[0])
@@ -29,6 +34,10 @@ func main() {
 	})
 	window.Call("addEventListener", "pointerdown", mouseEventHandler)
 
+	// attempt to receive from empty channel
+	// since noone ever sends anything on it, it's essentially a blocking forever operation
+	// we basically have a daeomon/service/background program
+	// in WASM world, our game will keep running 😉
 	<-runGameForever
 }
 
@@ -54,8 +63,14 @@ func updateGame() {
 func updatePlayer(event js.Value) {
 	mouseX := event.Get("clientX").Float()
 	mouseY := event.Get("clientY").Float()
+
+	// basically threads/async/parallelism
+	// TODO difference with Web Workers
+	// TODO difference with Service Workers
+	// https://gobyexample.com/goroutines
 	go log("mouseEvent", "x", mouseX, "y", mouseY)
 
+	// next gist
 	if isLaserCaught(mouseX, mouseY, gs.laserX, gs.laserY) {
 		go playSound()
 	}
@@ -63,12 +78,13 @@ func updatePlayer(event js.Value) {
 
 func setup() {
 	window = js.Global()
-	document := window.Get("document")
-	body := document.Get("body")
+	doc = window.Get("document")
+	body = doc.Get("body")
+
 	windowSize.h = window.Get("innerHeight").Float()
 	windowSize.w = window.Get("innerWidth").Float()
 
-	canvas = document.Call("createElement", "canvas")
+	canvas = doc.Call("createElement", "canvas")
 	canvas.Set("height", windowSize.h)
 	canvas.Set("width", windowSize.w)
 	body.Call("appendChild", canvas)
@@ -84,6 +100,8 @@ func isLaserCaught(mouseX, mouseY, laserX, laserY float64) bool {
 	// return laserCtx.Call("isPointInPath", mouseX, mouseY).Bool()
 }
 
+// no this isn't some magic; it's straight from HTML5
+// https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement#Basic_usage
 func playSound() {
 	beep.Call("play")
 	window.Get("navigator").Call("vibrate", 300)
@@ -91,6 +109,9 @@ func playSound() {
 
 type gameState struct{ laserX, laserY, directionX, directionY, laserSize float64 }
 
+// basically a rest+spread from javascript
+// ...interface{} is more or less `any` from Typescript
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description
 func log(args ...interface{}) {
-	window.Get("console").Call("log", args...) // importing fmt for logs adds quite a lot to the build size
+	window.Get("console").Call("log", args...)
 }
