@@ -15,9 +15,7 @@ Docker, Go 1.12 (1.12-rc)
 
 `make build_twifkak` to build with golang fork which makes it work on Chrome+Android
 
-`make build`
-
-`make serve` run nginx with proper WebAssembly __MIME__ type, Chrome/Firefox cries otherwise
+`make serve` to run static http server
 
 ## Contact me
 [https://olso.space](https://olso.space)
@@ -28,3 +26,4 @@ Docker, Go 1.12 (1.12-rc)
 
 * WebAssembly is not enabled in iOS Simulator
 * I had to use twifkak's Golang fork to instantiate in on phone, default Golang Wasm currently allocates too much memory
+* For some reason, there is an `Audio` `play()` delay on Android
