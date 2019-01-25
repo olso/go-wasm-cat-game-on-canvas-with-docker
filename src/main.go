@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	// js.Value can be any JS object/type/constructor
 	window, doc, body, canvas, laserCtx, beep js.Value
 	windowSize                                struct{ w, h float64 }
 	// gs is at the highest scope, all others can access it
@@ -32,6 +33,7 @@ func main() {
 	})
 	window.Call("requestAnimationFrame", renderer)
 
+	// let's handle that mouse/touch down
 	var mouseEventHandler js.Func = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		updatePlayer(args[0])
 		return nil
