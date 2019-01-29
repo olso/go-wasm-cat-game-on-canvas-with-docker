@@ -1,6 +1,6 @@
 # 🐈 go-wasm-cat-game-on-canvas-with-docker
 
-Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
+Works with Chrome for Android! Thank you [@twifkak](https://github.com/golang/go/issues/27462)
 
 [https://olso.space/go-wasm-cat-game-on-canvas/index.html](demo)
 
