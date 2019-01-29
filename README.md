@@ -4,7 +4,7 @@ Works with Chrome for Android! Thank you [@twifkak](https://github.com/twifkak)
 
 [https://olso.space/go-wasm-cat-game-on-canvas/index.html](demo)
 
-Companion codebase to article [TODO add link]()
+Companion codebase to article [https://medium.com/@martinolsansky/webassembly-with-golang-is-fun-b243c0e34f02](https://medium.com/@martinolsansky/webassembly-with-golang-is-fun-b243c0e34f02)
 
 ## Requirements
 Docker or local Go 1.12-rc
