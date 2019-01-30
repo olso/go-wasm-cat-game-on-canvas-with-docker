@@ -12,7 +12,7 @@ var (
 	window, doc, body, canvas, laserCtx, beep js.Value
 	windowSize                                struct{ w, h float64 }
 	// gs is at the highest scope, all others can access it
-	gs = gameState{laserSize: 35, directionX: 3.7, directionY: -3.7, laserX: 40, laserY: 40}
+	gs = gameState{laserSize: 45, directionX: 5.7, directionY: -5.7, laserX: 40, laserY: 40}
 )
 
 func main() {
